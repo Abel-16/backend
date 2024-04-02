@@ -8,3 +8,4 @@ class Util:
         email = EmailMessage(subject=data['email_subject'], body=data['email_body'], from_email="abeltadessealemu@gmail.com", to=[data['to_email']])
         
         email.send()
+        
