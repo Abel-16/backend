@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'product',
     'rest_framework',
     'testingapp',
-    'authentication'
+    'authentication',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -98,6 +99,14 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK={
+    'COERCE_DECIMAL_TO_STRING': False,
+    'NON_FIELD_ERRORS_KEY' : 'error',
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -140,6 +149,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK ={
-    'COERCE_DECIMAL_TO_STRING': False
-}
+
+
+#email configuration
+EMAIL_USE_TLS = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = '127.0.0.1'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
