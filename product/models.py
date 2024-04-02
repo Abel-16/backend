@@ -8,8 +8,8 @@ class Product(models.Model):
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now = True)
     created_date = models.DateTimeField(auto_now = True)
-    category = models.ForeignKey('Category', on_delete=models.PROTECT)
-    
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name = 'category')
+     
     def __str__(self) -> str:
         return self.title
     

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'product',
     'rest_framework',
     'testingapp',
+    'authentication'
 ]
 
 MIDDLEWARE = [
