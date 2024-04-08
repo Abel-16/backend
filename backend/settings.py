@@ -20,14 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o$d)%@2r-c4a#rxk_zaj=ke9$7d+*3_f^_9%o&+(f64j@y=ji='
+SECRET_KEY = 'django-insecure-ouszk%3j%bzc(m1!r6)17mx2e_i7!eprus35ts(-*wl2=2h@at'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-AUTH_USER_MODEL = 'authentication.User'
 
 
 # Application definition
@@ -39,12 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
-    'product',
-    'rest_framework',
-    'testingapp',
-    'authentication',
-    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -55,13 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
-
-INTERNAL_IPS =[
-    '127.0.0.1'
-]
-
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -91,22 +77,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'user': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'AgriBackend',
-        'HOST': 'localhost',
-        'USER' : 'postgres',
-        'PASSWORD' : 'root'
     }
-}
-
-REST_FRAMEWORK={
-    'COERCE_DECIMAL_TO_STRING': False,
-    'NON_FIELD_ERRORS_KEY' : 'error',
-     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
 }
 
 
@@ -150,13 +121,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-
-#email configuration
-EMAIL_USE_TLS = False
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = '127.0.0.1'
-EMAIL_PORT = 1025
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
