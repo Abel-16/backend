@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'authentication.User'
 
 # Application definition
 
@@ -80,6 +81,12 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK={
+    'NON_FIELD_ERRORS_KEY' : 'error',
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -121,3 +128,21 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#email configuration
+EMAIL_USE_TLS = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = '127.0.0.1'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS' : {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'id': 'header'
+        }
+    }
+}
