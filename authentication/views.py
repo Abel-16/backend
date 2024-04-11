@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status, views
-from .serializers import EmailVerificationSerializer, LoginSerializer, RegisterSerializer
+from .serializers import EmailVerificationSerializer, LoginSerializer, LoginWithPhoneSerializer, RegisterSerializer
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
@@ -67,6 +67,16 @@ class VerifyEmail(views.APIView):
 class LoginAPIView(generics.GenericAPIView):
     
     serializer_class = LoginSerializer
+    def post(self, request):
+        
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception = True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+class LoginAPIWithPhoneView(generics.GenericAPIView):
+    
+    serializer_class = LoginWithPhoneSerializer
     def post(self, request):
         
         serializer = self.serializer_class(data=request.data)

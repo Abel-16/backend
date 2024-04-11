@@ -9,17 +9,19 @@ class RegisterSerializer(serializers.ModelSerializer):
     
     class Meta:
         model=User
-        fields = ['email', 'username', 'password']
+        fields = ['email', 'username', 'phone_number', 'password']
     
     def validate(self, attrs):
         email = attrs.get('email', '')
         username= attrs.get('username','')
+        phone_number = attrs.get('phone_number','')
         
         if not username.isalnum():
             raise serializers.ValidationError('The username should only contain alphanumeric characters')
         return attrs
     
     def create(self, validated_data):
+        
         return User.objects.create_user(**validated_data)
 
 class EmailVerificationSerializer(serializers.ModelSerializer):
@@ -45,6 +47,48 @@ class LoginSerializer(serializers.ModelSerializer):
         password = attrs.get('password', '')
         
         user=auth.authenticate(email=email, password=password)
+        # import pdb
+        # pdb.set_trace()
+        if not user:
+            raise AuthenticationFailed('Invalid credentials, try again')
+        
+        if not user.is_active:
+            raise AuthenticationFailed('Account disabled, contact admin')
+        
+        if not user.is_verified:
+            raise AuthenticationFailed('Email is not verified')
+        
+       
+        
+        return {
+                'email': user.email,
+                'username': user.username,
+                'tokens': user.tokens
+                }
+        
+        return super().validate(attrs)
+    
+    
+    # TODO: This must have to be fixed
+
+class LoginWithPhoneSerializer(serializers.ModelSerializer):
+    phone_number=serializers.CharField(max_length=255, min_length=3)
+
+    password = serializers.CharField(max_length = 255, min_length=6, write_only=True)
+   
+    
+    
+    class Meta:
+        model = User
+        fields = ['phone_number', 'password',  'tokens']
+    
+    def validate(self,attrs):
+        phone = attrs.get('phone_number', '')
+        password = attrs.get('password', '')
+        
+        print(phone + " " + password)
+        user=auth.authenticate(phone_number=phone, password=password)
+        print(user)
         # import pdb
         # pdb.set_trace()
         if not user:
