@@ -29,6 +29,13 @@ ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'authentication.User'
 
+DJOSER = {
+    'SERIALIZERS' : {
+        'user_create' : 'authentication.serializers.RegisterSerializer'
+    }
+}
+
+
 # Application definition
 
 INSTALLED_APPS = [

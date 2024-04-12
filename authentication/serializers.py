@@ -3,11 +3,12 @@ from rest_framework import serializers
 from .models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6)
     
     
-    class Meta:
+    class Meta(BaseUserCreateSerializer.Meta):
         model=User
         fields = ['email', 'username', 'phone_number', 'password']
     
