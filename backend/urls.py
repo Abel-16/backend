@@ -5,7 +5,7 @@ from .swagger import schema_view
 
 
 urlpatterns = [
-    path('auth/', include('djoser.urls')),
+    # path('auth/', include('djoser.urls')),
     path('api/admin/', admin.site.urls),
     path('api/auth/', include('authentication.urls')),
     path('api/swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
