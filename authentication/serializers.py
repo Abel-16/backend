@@ -1,9 +1,16 @@
 
+from requests import Response
 from rest_framework import serializers
+from rest_framework import status
+from authentication.utils import Util
 from .models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.validators import EmailValidator
+from django.core.exceptions import ValidationError
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6)
     
@@ -19,11 +26,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         
         if not username.isalnum():
             raise serializers.ValidationError('The username should only contain alphanumeric characters')
+        if Util.validate_email(email) == False:
+            raise serializers.ValidationError('The email should only contain alphanumeric characters')
+        if not phone_number.isPhoneNumber():
+            raise serializers.ValidationError('The phone number should only contain alphanumeric characters')
         return attrs
     
     def create(self, validated_data):
-        
-        return User.objects.create_user(**validated_data)
+
+        User.objects.create_user(**validated_data)
+        return Response(status=status.HTTP_201_CREATED, data={'success':'User created successfully Please verify your email'})
 
 class EmailVerificationSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=555)
