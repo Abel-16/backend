@@ -36,6 +36,13 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
+    USER_TYPE_CHOICES = (
+        ('admin', 'Admin'),
+        ('customer', 'Customer'),
+        ('agent', 'Agent'),
+        ('farmer', 'Farmer'),
+    )
+    
     username = models.CharField(max_length = 255, unique = True, db_index = True)
     email = models.EmailField(max_length=254, unique= True, db_index = True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -45,6 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='customer')
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS=['username']

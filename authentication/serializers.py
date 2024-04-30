@@ -70,7 +70,7 @@ class LoginSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
     
     
-    # TODO: This must have to be fixed
+    # TODO: This must have to be fixed Leater
 
 class LoginWithPhoneSerializer(serializers.ModelSerializer):
     phone_number=serializers.CharField(max_length=255, min_length=3)
@@ -89,17 +89,21 @@ class LoginWithPhoneSerializer(serializers.ModelSerializer):
         
         print(phone + " " + password)
         user=auth.authenticate(phone_number=phone, password=password)
+        
+        # user= User.objects.filter(phone_number = phone).exists()
+        user = User.objects.get("email")
+
         print(user)
         # import pdb
         # pdb.set_trace()
-        if not user:
-            raise AuthenticationFailed('Invalid credentials, try again')
+        # if not user:
+        #     raise AuthenticationFailed('Invalid credentials, try again')
         
-        if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
+        # if not user.is_active:
+        #     raise AuthenticationFailed('Account disabled, contact admin')
         
-        if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
+        # if not user.is_verified:
+        #     raise AuthenticationFailed('Email is not verified')
         
        
         
