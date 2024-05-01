@@ -20,7 +20,31 @@ from django.urls import reverse
 from .utils import Util
 
 class RegisterView(generics.GenericAPIView):
+    
+    
     serializer_class=RegisterSerializer
+    
+    """
+    Custom Endpoint Description
+    """
+    @swagger_auto_schema(
+        operation_description="Endpoint Operation Description",
+        responses={
+            200: "Success",
+            400: "Bad Request",
+            401: "Unauthorized",
+        },
+        # request_body=openapi.Schema(
+        #     type=openapi.TYPE_OBJECT,
+        #     properties={
+        #         'field1': openapi.Schema(
+        #             type=openapi.TYPE_STRING, description="Field 1 Description"),
+        #         'field2': openapi.Schema(
+        #             type=openapi.TYPE_STRING, description="Field 2 Description"),
+        #     },
+        #     required=['field1']
+        # )
+    )
     def post(self, request):
         user = request.data
         serializer = self.serializer_class(data=user)
@@ -48,6 +72,8 @@ class RegisterView(generics.GenericAPIView):
         Util.send_email(data)
         
         return Response(data="Account created successfully please verify your email", status=status.HTTP_201_CREATED)
+    
+
 
 class VerifyEmail(views.APIView):
     serializer_class = EmailVerificationSerializer
