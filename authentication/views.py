@@ -11,6 +11,8 @@ import jwt
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.contrib.auth import authenticate, login
+
 class RegisterView(generics.GenericAPIView):
     serializer_class=RegisterSerializer
     def post(self, request):
@@ -39,7 +41,7 @@ class RegisterView(generics.GenericAPIView):
             }
         Util.send_email(data)
         
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response(data="Account created successfully please verify your email", status=status.HTTP_201_CREATED)
 
 class VerifyEmail(views.APIView):
     serializer_class = EmailVerificationSerializer
@@ -78,11 +80,32 @@ class LoginAPIWithPhoneView(generics.GenericAPIView):
     
     serializer_class = LoginWithPhoneSerializer
     
+    def post(self, request):
+        serializer = LoginWithPhoneSerializer(data=request.data)
+        if serializer.is_valid():
+            phone_number = serializer.validated_data['phone_number']
+            password = serializer.validated_data['password']
+            user = authenticate(request, phone_number=phone_number, password=password)
+            if user:
+                login(request, user)
+                return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Invalid phone number or password'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # serializer.is_valid(raise_exception = True)
+        # phone_number = serializer.validated_data['phone_number']
+        # password = serializer.validated_data['password']
+        # print("hellooooooooooooo")
+        # user = authenticate(request, phone_number=phone_number, password=password)
+        # import pdb
+        # pdb.set_trace()
+        # print(user)
+        # # serializer = self.serializer_class(data=request.data)
+        # # serializer.is_valid(raise_exception = True)
+        
+        # return Response(serializer.data, status=status.HTTP_200_OK)
+   
+class RequestPasswordResetEmail(generics.GenericAPIView):
     
     def post(self, request):
-        
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception = True)
-        
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        
+        pass
