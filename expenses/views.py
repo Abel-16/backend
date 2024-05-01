@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, QuerySet
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, QuerySet
 from .serializers import ExpanseSerializer
 from .models import Expanse
 from rest_framework import permissions
+from .permissions import IsOwner
 
 class ExpanseListAPIView(ListCreateAPIView):
     serializer_class = ExpanseSerializer
@@ -16,10 +17,10 @@ class ExpanseListAPIView(ListCreateAPIView):
     def get_queryset(self):
         return self.queryset.filter(owner=self.request.user)
 
-class ExpanseDetailAPIView(ListCreateAPIView):
+class ExpanseDetailAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = ExpanseSerializer
     queryset = Expanse,object.all()
-    permission_classes = (permissions.IsAuthenticated)
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
     lookup_field = "id"
     
     
