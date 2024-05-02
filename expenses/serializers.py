@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from .models import Expanse
 
-class ExpanseSerializer(serializers.Serializer):
+class ExpanseSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Expanse
-        fields = ['date',  'description', 'amount', 'category']
+        fields = ['id','date', 'description', 'amount', 'category']
         
