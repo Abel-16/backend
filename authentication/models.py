@@ -23,13 +23,13 @@ class UserManager(BaseUserManager):
         user.save()
         return user
     
-    def create_superuser(self, username, email, phone_number, password):
+    def create_superuser(self, username, email, user_type, password):
         
         if password is None:
             raise TypeError("Password should not be none")
         
      
-        user = self.create_user(username, email, password)
+        user = self.create_user(username, email,user_type, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
