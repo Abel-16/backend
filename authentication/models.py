@@ -23,6 +23,24 @@ class UserManager(BaseUserManager):
         user.save()
         return user
     
+    # def create_superuser(self, email,username,  user_type, password, **other_fields):
+
+    #     other_fields.setdefault('is_staff',True)
+    #     other_fields.setdefault('is_superuser',True)
+    #     other_fields.setdefault('is_active',True)
+    #     phone_number="0943317021"
+
+    #     if other_fields.get('is_staff') is not True:
+    #      raise ValueError(
+    #        'Superuser must be assigned to is_staff=True.')
+    #     if other_fields.get('is_superuser') is not True:
+    #      raise ValueError(
+    #        'Superuser must be assigned to is_superuser=True.')
+        
+
+
+    #     return self.create_user(email, username,  user_type, password)
+    
     # def create_superuser(self, username, email,phone_number, user_type, password):
         
     #     if password is None:
