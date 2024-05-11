@@ -23,18 +23,18 @@ class UserManager(BaseUserManager):
         user.save()
         return user
     
-    def create_superuser(self, username, email, user_type, password):
+    # def create_superuser(self, username, email,phone_number, user_type, password):
         
-        if password is None:
-            raise TypeError("Password should not be none")
+    #     if password is None:
+    #         raise TypeError("Password should not be none")
         
      
-        user = self.create_user(username, email,user_type, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.is_active = True
-        user.save()
-        return user
+    #     user = self.create_user(username, email,phone_number,user_type, password)
+    #     user.is_superuser = True
+    #     user.is_staff = True
+    #     user.is_active = True
+    #     user.save()
+    #     return user
 
 class User(AbstractBaseUser, PermissionsMixin):
     USER_TYPE_CHOICES = (
