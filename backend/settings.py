@@ -54,8 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'corsheaders',
-    'djoser',
     'authentication',
     'drf_yasg',
     'rest_framework',
@@ -164,12 +164,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #email configuration
-EMAIL_USE_TLS = False
+# EMAIL_USE_TLS = False
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = '127.0.0.1'
+# EMAIL_PORT = 1025
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# Email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = '127.0.0.1'
-EMAIL_PORT = 1025
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+
+# SMTP server settings for Gmail
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'abelt.alx@gmail.com'
+EMAIL_HOST_PASSWORD = 'ecvlauoljxtqaqaf'
+EMAIL_USE_TLS = True
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS' : {
