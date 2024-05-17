@@ -54,15 +54,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+      'django_chapa',
     'corsheaders',
     'authentication',
     'drf_yasg',
     'rest_framework',
     'expenses',
     'store',
+    'payment',
 
 ]
+
+CHAPA_SECRET_KEY = "CHASECK_TEST-VJfumVrsShqDRBsczJsnS2tRF0CKaR04"
+
+CHAPA_API_URL = 'https://api.chapa.co/v1/transaction/initialize'
+
+CHAPA_API_VERSION = 'v1'
+
 
 MIDDLEWARE = [
     

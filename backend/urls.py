@@ -7,6 +7,8 @@ from .swagger import schema_view
 urlpatterns = [
     # path('auth/', include('djoser.urls')),
     path('api/admin/', admin.site.urls),
+path('api/chapa-webhook', include('django_chapa.urls')),
+     path('api/payment/', include('payment.urls')),
     path('api/auth/', include('authentication.urls')),
     path('api/expanses/', include('expenses.urls')),
     path('api/store/', include('store.urls')),
