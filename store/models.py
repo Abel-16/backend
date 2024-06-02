@@ -1,9 +1,11 @@
 from django.db import models
 
-
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 from farmer.models import Farmer
 from userauths.models import User, Profile
 from shortuuid.django_fields import ShortUUIDField
+from django.utils.text import slugify
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
@@ -46,6 +48,11 @@ class Product(models.Model):
     pid = ShortUUIDField(unique=True, length = 10, prefix = "ASP")
     slug = models.SlugField(unique=True)
     date = models.DateField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        if self.slug == self.slug == None:
+            self.slug = slugify(self.name)
+            
     
     def __str__(self) -> str:
         return self.title
@@ -136,3 +143,46 @@ class CartOrderItem(models.Model):
     
     def __str__(self):
         return self.oid
+    
+class ProductFaq(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null = True,  blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    email = models.EmailField(null = True, blank=True)
+    question = models.CharField(max_length=10000)
+    answer = models.TextField(null=True, blank=True)
+    active = models.BooleanField(default = False)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return self.question
+
+    class Meta:
+        verbose_name_plural = "Product FAQs"
+
+class Review(models.Model):
+    RATING = {
+        ("1", "1 Star"),
+        ("2", "2 Star"),
+        ("3", "3 Star"),
+        ("4", "4 Star"),
+        ("5", "5 Star"),
+    }
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    review = models.TextField()
+    replay = models.TextField(null = True, blank=True)
+    rating = models.IntegerField(default=None, choices=RATING )
+    
+    def __str__(self) -> str:
+        return self.RATING
+
+    class Meta:
+        verbose_name_plural = "Reviews & Rating"
+        
+    def profile(self):
+        return Profile.objects.get(user = self.user)
+    
+@receiver(post_save, sender=Review)
+def update_product_rating(sender, instance, **kwargs):
+    if instance.product:
+        instance.product.save()
