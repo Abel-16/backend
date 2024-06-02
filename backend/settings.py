@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     # 'store',
     'payment',
     'userauths',
+    'store',
+    'farmer',
 
 ]
 
