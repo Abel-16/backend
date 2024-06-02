@@ -50,6 +50,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
+        
+class UserPasswordResetSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ['email']  
+        extra_kwargs = {
+            'email': {'write_only': True}
+        }
+       
     
 class ProfileSerializer(serializers.ModelSerializer):
     
