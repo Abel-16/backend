@@ -15,7 +15,7 @@ class Farmer(models.Model):
     
     class Meta:
         verbose_name_plural = "Farmers"
-        ordering = ['-data']
+        ordering = ['-date']
         
     def __str__(self) -> str:
         return str(self.name)
