@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'expenses',
     'store',
     'payment',
+    'userauths',
 
 ]
 

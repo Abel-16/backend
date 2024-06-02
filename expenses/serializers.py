@@ -5,5 +5,6 @@ class ExpanseSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Expanse
+        
         fields = ['id','date', 'description', 'amount', 'category']
         
