@@ -58,17 +58,19 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.title
     
-    def product_rating(self):
-        product_rating = Review.objects.filter(product=self).aaggregate(avg_rating=models.Avg("rating"))
-        return product_rating['avg_rating']
+    # def product_rating(self):
+    #     product_rating = Review.objects.filter(product=self).aaggregate(avg_rating=models.Avg("rating"))
+    #     return product_rating['avg_rating']
+    
     def rating_count(self):
         rating_count = Review.objects.filter(product=self).count()
         return rating_count
+    
     def gallery(self):
         return Gallery.objects.filter(product=self)
     
     def save(self, *args, **kwargs):
-        self.rating = self.product_rating()
+        # self.rating = self.product_rating()
         super(Product, self).save(*args, **kwargs)
 
 class Gallery(models.Model):

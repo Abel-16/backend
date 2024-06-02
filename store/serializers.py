@@ -33,7 +33,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "featured",
             "views",
             "rating",
-            "product_rating",
+            # "product_rating",
             "rating_count",
             "gallery",
             "farmer",
