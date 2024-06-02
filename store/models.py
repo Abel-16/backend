@@ -51,3 +51,67 @@ class Product(models.Model):
         return self.title
     
     
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    qty = models.ProductIntegerField(default = 0)
+    price = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    sub_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    shipping_amount = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    service_free = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    tax_fee = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    country = models.CharField(max_length=100, null = True, blank=True)
+    cart_id = models.CharField(max_length=100, null = True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return f"{self.cart_id} - {self.product.title}"
+    
+
+class CartOrder(models.Model):
+    PAYMENT_STATUS = {
+        ("paid", "Paid"),
+        ("pending", "Pending"),
+        ("processing", "Processing"),
+        ("Cancelled", "Cancelled"),  
+    }
+    ORDER_STATUS = {
+        ("pending", "Pending"),
+        ("fulfilled", "Fulfilled"),
+        ("Cancelled", "Cancelled"),  
+    }
+    farmer = models.ManyToManyField(Farmer, blank=True)
+    buyer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    sub_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    shipping_amount = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    service_free = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    tax_fee = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    
+    payment_status = models.CharField(choices=PAYMENT_STATUS, max_length=100, default="processing")
+    order_status = models.CharField(choices=ORDER_STATUS, max_length=100, default="pending")
+    
+    
+    # Coupons
+    initial_total = models.DateTimeField(default=0.09, max_digit = 12, decimal_places = 2)
+    saved = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    
+    #person data
+    full_name = models.CharField(max_length=100, null= True, blank=True)
+    email = models.CharField(max_length=100, null= True, blank=True)
+    mobile = models.CharField(max_length=100, null= True, blank=True)
+   
+   # shiping Address
+    address = models.CharField(max_length=100, null= True, blank=True)
+    city = models.CharField(max_length=100, null= True, blank=True)
+    state = models.CharField(max_length=100, null= True, blank=True)
+    country = models.CharField(max_length=100, null= True, blank=True)
+    
+    oid = ShortUUIDField(unique=True, length = 10, prefix = "ASP-Order")
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.oid
+    
+    
