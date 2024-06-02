@@ -54,7 +54,7 @@ class Product(models.Model):
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    qty = models.ProductIntegerField(default = 0)
+    qty = models.PositiveIntegerField(default = 0)
     price = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     sub_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     shipping_amount = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
@@ -94,7 +94,7 @@ class CartOrder(models.Model):
     
     
     # Coupons
-    initial_total = models.DateTimeField(default=0.09, max_digit = 12, decimal_places = 2)
+    initial_total = models.DecimalField(default=0.09, max_digits = 12, decimal_places = 2)
     saved = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     
     #person data
@@ -114,4 +114,25 @@ class CartOrder(models.Model):
     def __str__(self):
         return self.oid
     
+
+class CartOrderItem(models.Model):
+    order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     
+    qty = models.PositiveIntegerField(default = 0)
+    price = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    sub_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    shipping_amount = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    service_free = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    tax_fee = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    country = models.CharField(max_length=100, null = True, blank=True)
+    
+    initial_total = models.DecimalField(default=0.00, max_digits = 12, decimal_places = 2)
+    saved = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    oid = ShortUUIDField(unique=True, length = 10, prefix = "ASP-Order")
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.oid
