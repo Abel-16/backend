@@ -9,7 +9,7 @@ import shortuuid
 from rest_framework import status
 from .models import Profile
 from rest_framework.response import Response
-
+import random
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -30,31 +30,29 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return Profile.objects.get(user=self.request.user)
 
 def generate_otp():
-    uuid_key = shortuuid.uuid()
-    unique_key = uuid_key[6]
-    return unique_key
+    return ''.join(random.choices('0123456789', k=6))
 
 class PasswordResetEmailVerify(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
     serializer_class = UserPasswordResetSerializer
     
     def get_object(self):
-    
-         email = self.kwargs['email']
-         # user = User.objects.get(email=email)
-         user = get_object_or_404(User,email=email)
-         print("user *************", user)
+        email = self.kwargs['email']
+        user = get_object_or_404(User,email=email)
+        print("user *************", user)
          
-         if user:
-             user.otp = generate_otp()
-             user.save()  # Save the OTP to the user object
-             uid64 = user.pk
-             otp = user.otp
-             
-             link = f"http://localhost:5173/create-new-password?otp={otp}&uidb64={uid64}"
-             print("Link ============", link)
-             
-         return user
+        if user:
+            user.otp = generate_otp()
+            user.save()  # Save the OTP to the user object
+            uid64 = user.pk
+            otp = user.otp
+            
+            link = f"http://localhost:5173/create-new-password?otp={otp}&uidb64={uid64}"
+            print("Link ============", link)
+            print("otp ============", otp)
+            print("uid64 ============", uid64)
+            # send email
+        return {user, link, otp, uid64}
   
    
 class PasswordChangeView(generics.CreateAPIView):
