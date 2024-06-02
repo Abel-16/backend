@@ -247,3 +247,15 @@ class Coupon(models.Model):
     
     def __str__(self) -> str:
         return self.code
+
+class Tax(models.Model):
+    country = models.CharField(max_length=40)
+    rate = models.IntegerField(default=5, help_text="Numbers added here are in percentage e.g 5%")
+    active = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.country
+    
+    class Meta:
+        verbose_name_plural = "Taxes"
+    
