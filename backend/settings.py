@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 import datetime
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,13 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*','https://web-front-end-coral.vercel.app','http://localhost:3000/']
 
-AUTH_USER_MODEL = 'authentication.User'
+# AUTH_USER_MODEL = 'authentication.User'
 
-DJOSER = {
-    'SERIALIZERS' : {
-        'user_create' : 'authentication.serializers.RegisterSerializer'
-    }
-}
+
 
 CORS_ALLOWED_ORIGINS = [
     "https://web-front-end-coral.vercel.app",
@@ -48,6 +45,8 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 # Application definition
 
 INSTALLED_APPS = [
+    
+      'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,11 +55,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
       'django_chapa',
     'corsheaders',
-    'authentication',
+    # 'authentication',
     'drf_yasg',
     'rest_framework',
-    'expenses',
-    'store',
+    # 'expenses',
+    # 'store',
     'payment',
     'userauths',
 
@@ -106,7 +105,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR, 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+AUTH_USER_MODEL = 'userauths.User'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -198,6 +204,46 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME' :timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME':timedelta(days=50),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION':True,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'VERIFYING_KEY': None,
+    'ISSUER': None,
+    'JWK_URL' : None,
+    'LEEWAY' : 0,
+    'AUTH_HEADER_TYPES' : ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_aUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+    
+    
+    
+    
+}
+
+JAZZMIN_SETTINGS={
+    'site_title' : "Agristore",
+    'site_header' :'Agriculture Products',
+    'site_brand' :'Welcome to Agriculture ',
+    'welcome_sign' :'Welcome to Agriculture ',
+    'copyright' :'AAiT Agriculture ',
+    'show_sidebar': True,
+    # 'show_ui_builder': True
+    
+}
+
+JAZZMIN_UI_TWEAKS = {
+ 
+    "theme": "minty",
+    "dark_mode_theme": "solar ",
+}
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

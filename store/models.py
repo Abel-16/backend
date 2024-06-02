@@ -6,7 +6,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from uuid import uuid4
 
-from authentication.models import User
+#from authentication.models import User
 from store.validators import validate_file_size
 
 

@@ -35,21 +35,17 @@ class UserAddress(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.FileField(upload_to="image", default="default/default-user.jpg", null=True, blank=True)
-    full_name = models.CharField(max_length=100, null=True, blank=True)
+    
     about = models.CharField(max_length=250,null=True, blank=True)
     gender = models.CharField(max_length=100, null=True, blank=True)
-    address = models.OneToOneField(UserAddress, on_delete=models.PROTECT) 
+    address = models.OneToOneField(UserAddress,  null=True,on_delete=models.PROTECT) 
     date = models.DateField(auto_now_add=True)
     pid = ShortUUIDField(unique= True, length = 10, max_length = 20, alphabet="abcdefghijk")
     
     def __str__(self) -> str:
-        if self.full_name:
-            return str(self.full_name)
-        else:
-            return str(self.user)
+        return str(self.user)
     def save(self, *args, **kwargs):
-        if self.full_name == "" or self.full_name == None:
-            self.full_name = self.user.full_name        
+      
         super(Profile, self).save(*args, **kwargs)    
 
 def create_user_profile(sender, instance, created ,**kwargs):
