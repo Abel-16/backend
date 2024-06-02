@@ -50,13 +50,21 @@ class Product(models.Model):
     date = models.DateField(auto_now_add=True)
     
     def save(self, *args, **kwargs):
-        if self.slug == self.slug == None:
+        if self.slug == "" or  self.slug == None:
             self.slug = slugify(self.name)
+        super(Product, self).save(*args, **kwargs)
             
     
     def __str__(self) -> str:
         return self.title
     
+    def product_rating(self):
+        product_rating = Review.objects.filter(product=self).aaggregate(avg_rating=models.Avg("rating"))
+        return product_rating['avg_rating']
+    
+    def save(self, *args, **kwargs):
+        self.rating = self.product_rating()
+        super(Product, self).save(*args, **kwargs)
     
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -186,3 +194,36 @@ class Review(models.Model):
 def update_product_rating(sender, instance, **kwargs):
     if instance.product:
         instance.product.save()
+        
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return self.product.title
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+    order = models.ForeignKey(CartOrder, on_delete=models.CASCADE, null = True, blank=True)
+    order_item = models.ForeignKey(CartOrderItem, on_delete=models.SET_NULL,  null = True, blank=True)
+    seen = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+       if self.order:
+           return self.order.oid
+       else:
+           return f"Notification - {self.pk}"
+
+class Coupon(models.Model):
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE)
+    user_by = models.ManyToManyField(User, blank=True)
+    code = models.CharField(max_length=1000)
+    discount = models.IntegerField(default=1)
+    active = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return self.code
