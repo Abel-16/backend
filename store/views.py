@@ -94,3 +94,23 @@ class CartAPIView(generics.ListCreateAPIView):
             return Response({'message': "Cart Created Successfully"}, status=status.HTTP_202_CREATED)
     
 
+
+class CartListView(generics.ListAPIView):
+    serializer_class = CartSerializer
+    permission_classes = [AllowAny]
+    queryset = Cart.objects.all()
+
+    def get_queryset(self):
+        cart_id = self.kwargs.get('cart_id')
+        user_id = self.kwargs.get('user_id')
+
+        if user_id is not None:
+            user = User.objects.filter(id=user_id).first()
+            if user:
+                queryset = Cart.objects.filter(user=user, cart_id=cart_id)
+            else:
+                queryset = Cart.objects.none()  # No user found, return empty queryset
+        else:
+            queryset = Cart.objects.filter(cart_id=cart_id)
+
+        return queryset
