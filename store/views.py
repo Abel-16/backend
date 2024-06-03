@@ -1,5 +1,5 @@
 from decimal import Decimal
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from store.models import Cart, Product, Category, Tax
 from store.serializers import ProductSerializer, CategorySerializer,CartSerializer
 from rest_framework import generics
@@ -179,5 +179,30 @@ class CartDetailView(generics.RetrieveAPIView):
     def calculate_total(self, cart_item):
         return cart_item.total
     
+class CartItemDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = CartSerializer
+    lookup_field = 'cart_id'
     
+    def get_object(self):
+        cart_id = self.kwargs['cart_id']
+        item_id = self.kwargs['item_id']
+        user_id = self.kwargs.get('user_id')
+        
+        if user_id:
+            
+            user = get_object_or_404(User,id=user_id)
+            cart = get_object_or_404(Cart, id=item_id, cart_id=cart_id, user=user)
+        else:
+            cart = Cart.objects.get(id=item_id, cart_id = cart_id)
+        
+        return cart   
+
+
+class SearchProductApiView(generics.ListCreateAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
     
+    def get_queryset(self):
+        query = self.request.GET.get("query")
+        product = Product.objects.filter(status="Published", title__icontains=query)
+        return product
