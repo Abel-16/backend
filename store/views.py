@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.shortcuts import get_object_or_404, render
-from store.models import Cart, Product, Category, Tax
-from store.serializers import ProductSerializer, CategorySerializer,CartSerializer
+from store.models import Cart, CartOrder, CartOrderItem, Product, Category, Tax
+from store.serializers import CartOrderSerializer, ProductSerializer, CategorySerializer,CartSerializer
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -206,3 +206,87 @@ class SearchProductApiView(generics.ListAPIView):
         query = self.request.GET.get("query")
         product = Product.objects.filter(status="Published", title__icontains=query)
         return product
+
+
+class CreateOrderAPIView(generics.CreateAPIView):
+    serializer_class = CartOrderSerializer
+    queryset = CartOrder.objects.all()
+    permission_classes = [AllowAny]
+    
+    def create(self, request):
+        payload = request.data
+        
+        full_name = payload["full_name"]
+        email = payload["email"]
+        mobile = payload["mobile"]
+        address = payload["address"]
+        city = payload["city"]
+        state = payload["state"]
+        country = payload["country"]
+        cart_id = payload["cart_id"]
+        user_id = payload["user_id"]
+   
+        if user_id != 0:
+            user = User.objects.get(id = user_id)
+        else:
+            user = None
+        
+        cart_items = Cart.objects.filter(cart_id = cart_id)
+        
+        total_shipping = Decimal(0.00)
+        total_tax = Decimal(0.00)
+        total_service_fee = Decimal(0.00)
+        total_sub_total = Decimal(0.00)
+        total_initial_total = Decimal(0.00)
+        total_total = Decimal(0.00)
+        
+        order = CartOrder.objects.create(
+            full_name = full_name,
+            email=email,
+            mobile = mobile,
+            address = address,
+            city = city,
+            state = state,
+            country = country
+        )
+
+        for c in cart_items:
+            CartOrderItem.objects.create(
+                order=order,
+                product=c.product,
+                farmer=c.farmer,
+                size=c.size,
+                price=c.price,
+                sub_total=c.sub_total,
+                shipping_amount=c.shipping_amount,
+                service_fee=c.service_fee,
+                tax_fee=c.tax_fee,
+                initial_total = c.total_initial_total,
+                total=c.total
+            )
+            
+            total_shipping  += Decimal(c.shipping_amount)
+            total_tax  += Decimal(c.total_tax)
+            total_service_fee  += Decimal(c.total_service_fee)
+            total_sub_total  += Decimal(c.total_sub_total)
+            total_initial_total += Decimal(c.total)
+            total_total += Decimal(c.total)
+            
+            order.farmer.add(c.product.farmer)
+        
+        order.sub_total = total_sub_total
+        order.shipping_amount = total_shipping
+        order.tax_fee = total_tax
+        order.service_fee = total_service_fee
+        order.initial_total = total_initial_total
+        order.total = total_total
+        
+        order.save()
+        
+        return Response({"message": "Order Created Successfully", "Order_oid": order.oid}, status=status.HTTP_201_CREATED)
+       
+        
+        
+        
+            
+    
