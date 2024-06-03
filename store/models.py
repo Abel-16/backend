@@ -148,6 +148,8 @@ class CartOrder(models.Model):
     
     def __str__(self):
         return self.oid
+    def orderItem(self):
+        return CartOrderItem.filter(order=self)
     
 
 class CartOrderItem(models.Model):

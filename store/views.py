@@ -7,12 +7,20 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from userauths.models import User
 from rest_framework import status
-\
+
 class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
+    
+class ProductsByCategoryView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        category_id = self.kwargs.get('category_id')
+        return Product.objects.filter(category=Category.objects.filter(category_id))
+    
 class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -286,7 +294,17 @@ class CreateOrderAPIView(generics.CreateAPIView):
         order.save()
         
         return Response({"message": "Order Created Successfully", "Order_oid": order.oid}, status=status.HTTP_201_CREATED)
-       
+
+
+class CheckoutView(generics.RetrieveAPIView):
+    serializer_class = CartOrderSerializer
+    lookup_field = 'order_oid'
+    
+    def get_object(self):
+        order_oid = self.kwargs['order_oid']
+        order = CartOrder.objects.get(oid=order_oid)
+        return order
+    
         
         
         

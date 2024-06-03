@@ -37,6 +37,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://web-front-end-coral.vercel.app",
     "http://localhost:8080",
     "http://127.0.0.1:9000",
+    "https://web-front-5u00dzsf6-ab3lts-projects.vercel.app",
 ]
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://web-front-end-coral.vercel.app",
