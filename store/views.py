@@ -115,7 +115,7 @@ class CartListView(generics.ListAPIView):
 
         return queryset
 
-class CartListView(generics.RetrieveAPIView):
+class CartDetailView(generics.RetrieveAPIView):
     serializer_class = CartSerializer
     permission_classes = [AllowAny]
     lookup_field = "cart_id"
@@ -136,7 +136,7 @@ class CartListView(generics.RetrieveAPIView):
 
         return queryset
     
-    def get(self, reuest, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         
         total_shipping = 0.0
@@ -146,11 +146,11 @@ class CartListView(generics.RetrieveAPIView):
         total_total = 0.0
         
         for cart_item in queryset:
-            total_shipping += self.calculate_shipping(cart_item)
-            total_tax += self.calculate_tax(cart_item)
-            total_service_fee += self.calculate_service_fee(cart_item)
-            total_sub_total += self.calculate_sub_total(cart_item)
-            total_total += self.calculate_total(cart_item)
+            total_shipping += float(self.calculate_shipping(cart_item))
+            total_tax += float(self.calculate_tax(cart_item))
+            total_service_fee += float(self.calculate_service_fee(cart_item))
+            total_sub_total += float(self.calculate_sub_total(cart_item))
+            total_total += float(self.calculate_total(cart_item))
             
         data = {
             'shipping' : total_shipping,
@@ -163,7 +163,7 @@ class CartListView(generics.RetrieveAPIView):
         
         return Response(data)
     def calculate_shipping(self, cart_item):
-        return cart_item.shipping__amount
+        return cart_item.shipping_amount
     
     def calculate_tax(self, cart_item):
         return cart_item.tax_fee

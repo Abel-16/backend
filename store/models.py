@@ -93,7 +93,7 @@ class Cart(models.Model):
     price = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     sub_total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     shipping_amount = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
-    service_free = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+    service_fee = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     tax_fee = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     country = models.CharField(max_length=100, null = True, blank=True)
