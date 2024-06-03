@@ -225,11 +225,13 @@ class CreateOrderAPIView(generics.CreateAPIView):
         country = payload["country"]
         cart_id = payload["cart_id"]
         user_id = payload["user_id"]
-   
-        if user_id != 0:
+        
+        try:
             user = User.objects.get(id = user_id)
-        else:
+        except:
             user = None
+            
+   
         
         cart_items = Cart.objects.filter(cart_id = cart_id)
         
