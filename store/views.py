@@ -13,13 +13,14 @@ class CategoryListAPIView(generics.ListAPIView):
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
     
+
 class ProductsByCategoryView(generics.ListAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
         category_id = self.kwargs.get('category_id')
-        return Product.objects.filter(category=Category.objects.filter(category_id))
+        return Product.objects.filter(category_id=category_id)
     
 class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
