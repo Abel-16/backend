@@ -198,7 +198,7 @@ class CartItemDeleteAPIView(generics.DestroyAPIView):
         return cart   
 
 
-class SearchProductApiView(generics.ListCreateAPIView):
+class SearchProductApiView(generics.ListAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
     
