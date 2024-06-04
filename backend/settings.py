@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'api',
-    # 'expenses',
+    'website',
     # 'store',
     'payment',
     'userauths',
